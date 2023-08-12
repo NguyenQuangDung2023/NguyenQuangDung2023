@@ -187,7 +187,8 @@ class SinAndCosFunctionPlot(MovingCameraScene):
          ###Hoạt cảnh cuối với văn bản####################################
         ###Văn bản
         self.remove(dot1,dot2)
-        self.play(AnimationGroup(Tong_the.animate.arrange(direction=DOWN, aligned_edge=LEFT).scale(0.75).move_to(UL).shift(LEFT)),run_time=5,lag_ratio=0.8)
+        self.play(AnimationGroup(Tong_the.animate.arrange(direction=DOWN, aligned_edge=LEFT).scale(0.75).move_to(0.8*UL).shift(LEFT)),run_time=5,lag_ratio=0.8)
+        self.remove(Dothi[1],Dothi[2],Dothi[3])
         #Baigiang: Sự biến thiên của hàm số 
         t1 = Tex("1. Xét trên $(-\infty,x_1)$ và $(x_2,+\infty)$").set_color(WHITE)
         t11 =Tex("+ Hàm số đồng biến.")
