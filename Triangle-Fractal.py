@@ -82,7 +82,7 @@ class UpdatersExample(Scene):
         S4 = MathTex("S_4=\\frac{1}{3^3}S_1").next_to(tamgiac[3]).scale(0.75)
         S5 = MathTex("\\ldots").next_to(tamgiac[4])
         Sn = MathTex("S_n=\\frac{1}{3^n}S_1").next_to(tamgiac[8]).scale(0.75)
-        Tong = MathTex("S=S_1+S_2+\\ldots+S_n")
+        Tong = MathTex("S=S_1+S_2+\\ldots+S_n+\\cdots")
         Tex1 = Tex("Ta có")
         Tong1 = MathTex("S=\\frac{1}{6}S_0=\\frac{a^2\\sqrt{3}}{4}").next_to(Tex1,RIGHT)
         Tong2 = MathTex("S=S_1\\left(1+\\frac{1}{3}+\\frac{1}{3^2}+\\ldots+\\frac{1}{3^n}+\\cdots\\right)=\\frac{a^2\\sqrt{3}}{4}")
