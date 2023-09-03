@@ -1,1 +1,99 @@
+from manim import *
+from pathlib import Path
+import os
+import numpy as np
+FLAGS = f"-pqk"#Thử nghiệm chất lượng video qua các Render
+SCENE = "example" #  Sân khấu mình cần render
+class BasiShape(MovingCameraScene):
+    def construct(self):
+        self.add_sound("backgroud-music")
+        x_vecto = 4.5
+        y_vecto = 4.5
+        s_up    = 0
+        s_down = 0
+        k = 1
+        t = 1
+        strok_width = 0
+        a1 = Ellipse(height=3.5,width=4,fill_opacity=0, color=GREEN,stroke_width=2).shift(LEFT * 0.75).scale(0.75)
+        #square = Square(fill_opacity=0.75, color=GREEN).scale(2).shift(RIGHT * 1.5)
+        a2 = Ellipse(height=3.5,width=4,fill_opacity=0, color=YELLOW,stroke_width=2).shift(RIGHT * 0.75).scale(0.75)
+        a3 = Ellipse(height=3.5,width=4,fill_opacity=0, color=RED,stroke_width=2).shift(DOWN* 1).scale(0.75)
+        gr = VGroup(a1, a2)
+        #self.play(Write(a1))
+        #self.play(Write(a2))
+        #Tên phép toán
+        Ten = Tex("CÁC PHÉP TOÁN TẬP HỢP").scale(t)
+        circ = Circle(fill_opacity=1,color=PURE_GREEN)
+        Giao = Tex("\\begin{minipage}{4cm} Học sinh học giỏi môn chỉ hai môn Toán - Lí\\end{minipage}").scale(t)
+        Hop = Tex("\\begin{minipage}{4cm} Học sinh học giỏi môn chỉ hai môn Toán - Hóa\\end{minipage}").scale(t)
+        Hieu1 = Tex("\\begin{minipage}{4cm} Học sinh học giỏi môn chỉ hai môn Lí - Hóa\\end{minipage}").scale(t)
+        Hieu2 = Tex("\\begin{minipage}{4cm} Học sinh học giỏi cả ba môn Toán- Lí - Hóa\\end{minipage}").scale(t)
+        Ol_Toan = Tex("\\begin{minipage}{4cm} Học sinh chỉ học giỏi Toán\\end{minipage}").scale(t)
+        Ol_Li = Tex("\\begin{minipage}{4cm} Học sinh chỉ học giỏi Lí\\end{minipage}").scale(t)
+        Ol_Hoa = Tex("\\begin{minipage}{4cm} Học sinh chỉ học giỏi Hóa\\end{minipage}").scale(t)
+        Bai_toan = Tex("\\begin{minipage}{8cm} Lớp học có $7$ học sinh giỏi Toán, $5$ học sinh giỏi Lý, $6$ học sinh giỏi Hóa, $3$ học sinh giỏi cả Toán và Lý, $4$ học sinh giỏi cả Toán và Hóa, $2$ học sinh giỏi cả Lý và Hóa, $1$ học sinh giỏi cả ba môn Toán, Lý, Hóa. Tính số học sinh giỏi ít nhất một môn của lớp.\\end{minipage}")
+        Bai_toan.set_color_by_gradient(YELLOW_C,WHITE,YELLOW_C,WHITE,PURE_GREEN)
+        Bai_toan1 = Tex("\\begin{minipage}{5.5cm} Lớp học có $7$ học sinh giỏi Toán, $5$ học sinh giỏi Lý, $6$ học sinh giỏi Hóa, $3$ học sinh giỏi cả Toán và Lý, $4$ học sinh giỏi cả Toán và Hóa, $2$ học sinh giỏi cả Lý và Hóa, $1$ học sinh giỏi cả ba môn Toán, Lý, Hóa. Tính số học sinh giỏi ít nhất một môn của lớp.\\end{minipage}")
+        Bai_toan1.scale(0.6).set_color_by_gradient(YELLOW_C,WHITE,YELLOW_C,WHITE,PURE_GREEN).set_stroke_width(2)
+        Ket_luan = Tex("Có cách nào đếm nhanh số phần tử của $A\\cup B\\cup C$?")
+        tex = MathTex(r'n(A\cup B \cup C) &= n(A\cup B) + n(C) -n(A \cup B\cap C)\\ &= n(A) +n(B)+n(C)\\&-n(A\cap B)-n(B\cap C)-n(A\cap C)\\&+n(A\cap B\cap C)\\&= 7 + 5 + 6-3-4-2+1\\&=10', font_size=30)
+        Loigiai = Tex("\\begin{minipage}{6cm}Ta có, số học sinh giỏi Toán $n(A)=7$, số học sinh giỏi Lí $n(B)=6$, số học sinh giỏi Lí $n(C)=6$, số học sinh giỏi Toán-Lí $n(A\\cap B)=3$, số học sinh giỏi Toán-Hóa $n(A\\cap C)=4$, số học sinh giỏi Lí-Hóa $n(B\\cap C)=1$, số học sinh giỏi cả ba môn Toán-Lí Hóa $n(A\\cap B\\cap C)=1$\\end{minipage}")
+        #self.play(group.animate.scale(0.5).shift(UP * 1.6))
+        #Bai_toan.set_color(random_bright_color())
+        #Bai_toan.set_color_by_tex("Toán", YELLOW)
+        Hop12 = Union(a1, a2, fill_opacity=k, color=PINK,stroke_width=strok_width)#Hợp hai tập
+        Hop13 = Union(a1, a3, fill_opacity=k, color=PINK,stroke_width=strok_width)#Hợp hai tập
+        Hop23 = Union(a2, a3, fill_opacity=k, color=PINK,stroke_width=strok_width)#Hợp hai tập
+        Giao_a12 = Intersection(a1,a2,fill_opacity=k, color=RED,stroke_width=strok_width)#Hiệu A\B
+        Giao_a23 = Intersection(a2,a3,fill_opacity=k, color=TEAL,stroke_width=strok_width)#Hiệu B\A
+        Giao_a13 = Intersection(a1,a3,fill_opacity=k, color=YELLOW,stroke_width=strok_width)#Hiệu B\A
+        Giao_a123 = Intersection(a3,a1,a2,fill_opacity=k, color=YELLOW_C,stroke_width=strok_width)#Giao hai tập
+        Hieu_a12 = Difference(Giao_a12,Giao_a123,fill_opacity=k,color= PURE_BLUE,stroke_width=strok_width)
+        Hieu_a23 = Difference(Giao_a23,Giao_a123,fill_opacity=k,color= PURE_RED,stroke_width=strok_width)
+        Hieu_a13 = Difference(Giao_a13,Giao_a123,fill_opacity=k,color= PURE_GREEN,stroke_width=strok_width)
+        Hieu123 =   Difference(a1,Hop23,fill_opacity=0.75,stroke_width=strok_width, color=PURE_RED)
+        Hieu213 =   Difference(a2,Hop13,fill_opacity=0.75,stroke_width=strok_width, color=PURE_GREEN)
+        Hieu312 =   Difference(a3,Hop12,fill_opacity=0.5,stroke_width=strok_width, color=PURE_BLUE)
+        Num_H123 = Tex("1").move_to(Hieu123).shift(0.25*LEFT+0.25*UP)
+        Num_H213 = Tex("1").move_to(Hieu213).shift(0.25*RIGHT+0.25*UP)
+        Num_H312 = Tex("1").move_to(Hieu312)
+        #self.wait(5)
+        vmob_to_cut = Rectangle().scale(1.35)
+        Nhom_ten = VGroup(Giao,Hop,Hieu1,Hieu2,Ol_Toan,Ol_Li,Ol_Hoa).scale(0.65).arrange(direction=DOWN,aligned_edge=LEFT,buff=0.6)#.to_corner(UL)
+        Nhom_tap1 = VGroup(Giao_a12.copy(),Giao_a13.copy(),Giao_a23.copy(),Giao_a123.copy()).scale(0.75).arrange(direction=DOWN,aligned_edge=ORIGIN,buff=0.25)#.next_to(Nhom_ten,RIGHT)
+        Nhom_tap2 = VGroup(Hieu_a12.copy(),Hieu_a13.copy(),Hieu_a23.copy(),Giao_a123.copy(),Hieu123.copy().scale(0.6),Hieu213.copy().scale(0.6),Hieu312.copy().scale(0.6)).scale(0.6).arrange(direction=DOWN,aligned_edge=ORIGIN,buff=0.75)#.next_to(Nhom_ten,RIGHT)
+        for x in (0,1,2,3,4,5,6):
+            Nhom_tap2[x].move_to(Nhom_ten[x],RIGHT)
+        Num_13 =Tex("$2$",color=PURE_RED).move_to(Hieu_a13).shift(0.25*LEFT)
+        Hieu_a13.add(Num_13)
+        Num_12 =Tex("$3$").move_to(Hieu_a12)#.shift(0.25*LEFT)
+        Hieu_a12.add(Num_12)
+        Num_23 =Tex("$1$").move_to(Hieu_a23).shift(0.15*DOWN+0.35*RIGHT)#.shift(0.25*LEFT)
+        Hieu_a23.add(Num_23)
+        Num_123 =Tex("$1$",color=PURE_RED).move_to(Giao_a123)
+        Giao_a123.add(Num_123)         
+        Nhom_goc = VGroup(Hieu_a12,Hieu_a13,Hieu_a23,Giao_a123,Hieu123,Hieu213,Hieu312,Num_H123,Num_H213,Num_H312).scale(0.75)#.shift(2*DOWN)#.next_to(Nhom_tap,RIGHT)
+        Gr_Tong = VGroup(Bai_toan1,Nhom_goc ).arrange(direction=DOWN,aligned_edge=ORIGIN,buff=1.25)
+        Nhom_tong =VGroup(Nhom_ten,Nhom_tap2,Gr_Tong).arrange_in_grid(cols=3,buff=1)
+        #Nhom_tong.add(Bai_toan1)
+        c = Cutout(vmob_to_cut,*Gr_Tong[0], fill_opacity=0.25, color=BLUE, stroke_color=RED).move_to(Gr_Tong[0])
+        self.play(Write(Bai_toan),run_time=10)
+        self.play(FadeOut(Bai_toan,run_time=2))
+        self.play(Write(c),Write(Nhom_ten),Write(Nhom_tap2),Write(Gr_Tong))
+        for i in(0,1,2,3,4,5,6):
+            self.add_sound("wind")
+            self.play(Circumscribe(Nhom_goc[i]),Rotate(Nhom_goc[i],axis = Nhom_goc[i].get_center(),angle=2*PI, rate_func=linear),Circumscribe(Nhom_ten[i]),Circumscribe(Nhom_tap2[i]),Rotate(Nhom_tap2[i],axis = Nhom_tap2[i].get_center(),angle=2*PI, rate_func=linear),run_time=5)
+            self.add_sound("wind")
+            self.play(Flash(Nhom_goc[i]),Rotate(Nhom_goc[i],axis = Nhom_goc[i].get_center(),angle=2*PI, rate_func=linear),Flash(Nhom_tap2[i]),Flash(Nhom_ten[i]),Rotate(Nhom_tap2[i],axis = Nhom_tap2[i].get_center(), angle=2*PI, rate_func=linear),run_time=5)
+        self.remove(c,Nhom_ten,Nhom_tap2,Gr_Tong)
+        self.add_sound("wind")
+        self.play(Write(Ket_luan),run_time=15)
+        self.add_sound("wind")
+        self.play(Transform(Ket_luan,Loigiai),run_time=10)
+        self.add_sound("wind")
+        self.play(TransformMatchingTex(Ket_luan,tex),run_time=5)
+        self.wait(10)
+if __name__ == "__main__":
+    script_name = f"{Path(__file__).resolve()}"
+    os.system(f"manim {script_name} {SCENE} {FLAGS}")
 
