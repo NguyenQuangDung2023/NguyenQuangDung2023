@@ -1,0 +1,189 @@
+from manim import *
+from pathlib import Path
+import os 
+from colour import *
+import math
+#from manim_slides import Slide
+from manim_slides import ThreeDSlide
+# import numpy as np
+
+# --- Các chỉ định render ---
+# FLAGS = f"-pr 1920x1080"  
+# Render video: -r 1920,1080 ; -pql, -pqm, -pqh, -pqp, -pqk;  
+# Render hình: -ps, -psql, -psqp, -psqk
+#FLAGS = f"-psqk" # Xuất hình 4K
+FLAGS = f"-pqh"  # Xuất video FULL HD 60 khung hình trên giây
+#FLAGS = f"-pqk"#Thử nghiệm chất lượng video qua các Render
+SCENE = "example" #  Sân khấu mình cần renderimport math as m
+#manim-slides convert --to=pptx Tamdienvuong Tamdienvuong.pptx
+class Traiphang1(ThreeDSlide):
+    def construct(self):
+        self.add_sound("Happy-New-Year-ABBA")
+        axes_3d = ThreeDAxes(
+        x_range=(-1,5,1),
+        x_length=6,
+        y_range=(-1,5,1),
+        y_length=6,
+        z_range=(-1,5,1),
+        z_length=6
+        )
+        sph_rad = 4
+        sph = Sphere(radius = sph_rad)
+        nd1 = (
+            sph_rad * (
+            np.cos(100*DEGREES) * IN + 
+            np.sin(100*DEGREES) * np.cos(70*DEGREES) * RIGHT + 
+            np.sin(100*DEGREES) * np.sin(70*DEGREES) * UP
+            )
+        )
+        nd3 = (
+            sph_rad * (
+            np.cos(100*DEGREES) * IN + 
+            np.sin(100*DEGREES) * np.cos(250*DEGREES) * RIGHT + 
+            np.sin(100*DEGREES) * np.sin(250*DEGREES) * UP
+            )
+        )
+        nd2 = (
+            sph_rad * (
+            np.cos(100*DEGREES) * IN + 
+            np.sin(100*DEGREES) * np.cos(160*DEGREES) * RIGHT + 
+            np.sin(100*DEGREES) * np.sin(160*DEGREES) * UP
+            )
+        )
+
+        nd4 = (
+            sph_rad * (
+            np.cos(100*DEGREES) * IN + 
+            np.sin(100*DEGREES) * np.cos(340*DEGREES) * RIGHT + 
+            np.sin(100*DEGREES) * np.sin(340*DEGREES) * UP
+            )
+        )
+
+        nd5 = (
+            sph_rad * (
+            np.cos(0*DEGREES) * OUT + 
+            np.sin(0*DEGREES) * np.cos(0*DEGREES) * RIGHT + 
+            np.sin(0*DEGREES) * np.sin(0*DEGREES) * UP
+            )
+        )
+
+    #self.add_sound("backgroud-music")
+        self.set_camera_orientation(phi=75*DEGREES,theta=150*DEGREES,zoom=0.75)
+        #1. Bước 1: Thiết lập biến (Bắt buộc, nếu không sẽ lỗi).
+        num_scale=1
+        col1 = BLUE
+        col2 = ORANGE
+        width_line=1
+        ### Khai báo các điểm M =[x,y,z]        
+        a = 3
+        A = [a,a,0]
+        B = [-a,a,0]
+        C = [-a,-a,0]
+        D = [a,-a,0]
+        O =[0,0,0]
+        I = [0,0,2*a]
+        O =[0,0,0]
+        A1 = [a,a,2*a]
+        B1 = [-a,a,2*a]
+        C1 = [-a,-a,2*a]
+        D1 = [a,-a,2*a]
+        M =[a,0,a]
+        N=[0,a,a]
+        P=[-a,0,a]
+        Q=[0,-a,a]
+        DA=[a,0,0]
+        AB=[0,a,0]
+        BC=[-a,0,a]
+        CD=[0,-a,0]
+        AA1=[a,a,a]
+        DA1=[a,0,2*a]
+        AB1=[0,a,2*a]
+        #p = [0,0,p]
+        ###Đoạn định nghĩa hàm: Cấu trúc: def ham(Biến1, Biến2,...). Tùy chọn shade_in_3d=True giữ tính 3D
+        def face(self,position_list,color1,num1,color2,num2):
+            shape=Polygon(
+                *position_list,
+                fill_color=color1,
+                fill_opacity=num1,
+                stroke_color=color2,
+                stroke_width=num2,
+                shade_in_3d=True,
+            )
+            return shape
+        ABCD=face(self,[A,B,C,D],PURE_RED,1,col2,width_line)#đáy
+        MNPQ =face(self,[M,N,P,Q],PINK,1,col2,width_line)
+        IMN =face(self,[M,N,I],TEAL,1,col2,width_line)
+        INP =face(self,[I,N,P],YELLOW,1,col2,width_line)
+        IPQ =face(self,[I,P,Q],GREEN,1,col2,width_line)
+        IQM =face(self,[I,Q,M],WHITE,1,col2,width_line)
+        OMN =face(self,[M,N,O],TEAL,1,col2,width_line)
+        ONP =face(self,[O,N,P],YELLOW,1,col2,width_line)
+        OPQ =face(self,[O,P,Q],GREEN,1,col2,width_line)
+        OQM =face(self,[O,Q,M],PURE_RED,1,col2,width_line)
+        Goc =VGroup()
+        Goc1 = face(self,[O,DA,M],PURE_GREEN,1,col2,width_line)
+        Goc2 = face(self,[M,DA,A,AA1],PINK,1,col2,width_line)
+        Goc3 = face(self,[A,AA1,N,AB],RED,1,col2,width_line)
+        Goc4= face(self,[M,N,AA1],YELLOW_C,1,col2,width_line)
+        Goc5= face(self,[M,N,O],GREEN,1,col2,width_line)
+        Goc6 = face(self,[O,AB,N],GOLD_C,1,col2,width_line)
+        Goc.add(Goc1)
+        Goc.add(Goc2)
+        Goc.add(Goc3)
+        Goc.add(Goc4)
+        Goc.add(Goc5)
+        Goc.add(Goc6)
+        ######Góc tren
+        Goctren =VGroup()
+        Goc11 = face(self,[I,DA1,M],PURE_GREEN,1,col2,width_line)
+        Goc21 = face(self,[M,DA1,A1,AA1],PINK,1,col2,width_line)
+        Goc31 = face(self,[A1,AA1,N,AB1],RED,1,col2,width_line)
+        Goc41= face(self,[M,N,AA1],YELLOW_C,1,col2,width_line)
+        Goc51= face(self,[M,N,I],GREEN,1,col2,width_line)
+        Goc61 = face(self,[I,AB1,N],GOLD_C,1,col2,width_line)
+        Goc71 = face(self,[I,AB1,A1,DA1],PURE_GREEN,1,col2,width_line)
+        Goctren.add(Goc11)
+        Goctren.add(Goc21)
+        Goctren.add(Goc31)
+        Goctren.add(Goc41)
+        Goctren.add(Goc51)
+        Goctren.add(Goc61)
+        Goctren.add(Goc71)
+        Nuatren = VGroup(IMN,INP,IPQ,IQM,MNPQ.copy())
+        Nuaduoi = VGroup(OMN,ONP,OPQ,OQM,MNPQ.copy())
+        Nhom1 =VGroup()
+        for i in range(1, 1 + 4):
+            temp = Goc.copy()
+            temp.rotate(i * 90 * DEGREES, axis = OUT, about_point = ORIGIN)
+            Nhom1.add(temp)
+        Nhom2 =VGroup()
+        for i in range(1, 1 + 4):
+            temp = Goctren.copy()
+            temp.rotate(i * 90 * DEGREES, axis = OUT, about_point = ORIGIN)
+            Nhom2.add(temp)
+        #t = ValueTracker(90)
+        #N1.add_updater(lambda z: z.become(Dot3D([0,b+b*math.cos(t.get_value()*DEGREES),b*math.sin(t.get_value()*DEGREES)]).scale(0.01)))
+        #self.add_fixed_in_frame_mobjects(texsh)
+        self.move_camera(zoom=0.4)
+        self.play(Write(Nhom1.set_opacity(0.5)),Write(Nuatren.set_opacity(0.5)),Write(Nuaduoi.set_opacity(0.5)),Write(Nhom2.set_opacity(0.5)))
+        self.begin_ambient_camera_rotation(rate = 2/ 5)
+        self.wait(5)
+        self.set_camera_orientation(phi = 60 * DEGREES, theta = 30 * DEGREES)
+        self.play(Nhom1.animate.shift([0,0,-a]),Nhom2.animate.shift([0,0,0.5*a]))
+        self.wait(2)
+        self.play(Nhom1[0].animate.shift([1.5*a,1.5*a,0]),Nhom1[1].animate.shift([-1.5*a,1.5*a,0]),Nhom1[2].animate.shift([-1.5*a,-1.5*a,0]),Nhom1[3].animate.shift([1.5*a,-1.5*a,0]))
+        self.wait(2)
+        self.play(Nhom2[0].animate.shift([a,a,0]),Nhom2[1].animate.shift([-a,a,0]),Nhom2[2].animate.shift([-a,-a,0]),Nhom2[3].animate.shift([a,-a,0]))
+        self.wait(2)
+        self.play(Nuatren.animate.shift([0,0,0.25*a]),Nuaduoi.animate.shift([0,0,-a]))
+        self.wait(10)
+        self.play(FadeOut(Nhom1,Nhom2))
+        self.play(Nuatren.animate.shift([0,0,-1.5*a]),Nuaduoi.animate.shift([0,0,-0.25*a]))
+        self.wait(5)
+        self.play(Write(sph.shift([0,0,0.25])))
+        self.move_camera(zoom=0.6)
+        self.play(sph.animate.set_style(fill_opacity = 1 / 8))
+        self.wait(10)
+if __name__ == "__main__":
+    script_name = f"{Path(__file__).resolve()}"
+    os.system(f"manim {script_name} {SCENE} {FLAGS}")
