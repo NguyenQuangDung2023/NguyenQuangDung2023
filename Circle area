@@ -1,0 +1,65 @@
+from manim import *
+from pathlib import Path
+import os
+import numpy as np
+import math
+FLAGS = f"-pqk"#Thử nghiệm chất lượng video qua các Render
+SCENE = "example" #  Sân khấu mình cần render
+class BasiShape(MovingCameraScene):
+    def construct(self):
+        self.add_sound("joyful-whistle-186300")
+        #Loigiai = Tex("\\begin{minipage}{6cm}Ta có, số học sinh giỏi Toán $n(A)=7$, số học sinh giỏi Lí $n(B)=6$, số học sinh giỏi Lí $n(C)=6$, số học sinh giỏi Toán-Lí $n(A\\cap B)=3$, số học sinh giỏi Toán-Hóa $n(A\\cap C)=4$, số học sinh giỏi Lí-Hóa $n(B\\cap C)=1$, số học sinh giỏi cả ba môn Toán-Lí Hóa $n(A\\cap B\\cap C)=1$\\end{minipage}")
+        #M =np.array([1,0,0])
+        r = 1
+        O =np.array([0,0,0])
+        SS = Circle(radius=0.9,fill_opacity=1,color=PINK)
+        x = np.array([r,-r*PI,0])
+        y = np.array([r,r*PI,0])
+        linen = Line(x,y,stroke_width=1,color=PINK)
+        Day =Brace(linen,RIGHT).set_colof(YELLOW_C)
+        Congthuc = Tex("$2\\pi r$").rotate(90*DEGREES,axis=OUT,about_point=ORIGIN).move_to([2,0,0])
+        Dientich = Tex("$S=\\pi r^2=\\frac{1}{2}\\cdot r\\cdot 2\\pi r$").move_to([-3,3,0])
+        self.add(SS,Dientich,Congthuc,Day)
+        SSS = VGroup()
+        for i in range(0,100):
+        	r = 1 - 0.01*i
+        	M=Dot(np.array([1,2,0]))
+        	N=Dot(np.array([1,2,0]))
+        	n=Dot(np.array([1,2,0]))
+        	m=Dot(np.array([1,2,0]))
+        	x = np.array([r,-r*PI,0])
+        	y = np.array([r,r*PI,0])
+        	line =Line(O,M.get_center(),color=PINK)
+        	liney =Line(O,M.get_center(),color=PINK)
+        	linen = Line(x,y,stroke_width=1,color=PINK)
+        	t = ValueTracker(180)
+        	#d = (PI*r-((180-t.get_value())*PI/180)*r)
+        	rr = r
+        	S = Circle(radius=r,color=BLACK,stroke_width=1)
+        	arc1 =Arc(angle=PI)
+        	arc2 =Arc(angle=PI)
+        	M.add_updater(lambda z: z.become(Dot(np.array([r*math.cos(t.get_value()*DEGREES),r*math.sin(t.get_value()*DEGREES),0])).scale(0.1)))
+        	N.add_updater(lambda z: z.become(Dot(np.array([r*math.cos(t.get_value()*DEGREES)+(PI*r-(t.get_value()*PI/180)*r)*math.cos(t.get_value()*DEGREES+90*DEGREES),r*math.sin(t.get_value()*DEGREES)+(PI*r-(t.get_value()*PI/180)*r)*math.sin(t.get_value()*DEGREES+90*DEGREES),0])).scale(0.1)))
+            #Loigiai =Tex("ô ư")
+        	line.add_updater(lambda z: z.become(Line(N.get_center(),M.get_center(),color=PINK)))
+        	m.add_updater(lambda z: z.become(Dot(np.array([r*math.cos(t.get_value()*DEGREES),-r*math.sin(t.get_value()*DEGREES),0])).scale(0.1)))
+        	n.add_updater(lambda z: z.become(Dot(np.array([r*math.cos(t.get_value()*DEGREES)+(PI*r-(t.get_value()*PI/180)*r)*math.cos(t.get_value()*DEGREES+90*DEGREES),-r*math.sin(t.get_value()*DEGREES)-(PI*r-(t.get_value()*PI/180)*r)*math.sin(t.get_value()*DEGREES+90*DEGREES),0])).scale(0.1)))
+            
+        	liney.add_updater(lambda z: z.become(Line(m.get_center(),n.get_center(),color=PINK)))
+        	arc1.add_updater(lambda z: z.become(Arc(start_angle=0,angle=t.get_value()*DEGREES,color=PINK,stroke_width=1,radius=r)))
+        	arc2.add_updater(lambda z: z.become(Arc(start_angle=0,angle=-t.get_value()*DEGREES,color=PINK,stroke_width=1,radius=r)))
+        	self.add(S,line,linen,arc1,arc2,m,n,M,N,liney)
+        	self.play(t.animate.set_value(-1),run_time=(29/30)**i)
+        	SSS.add(S,line,linen,arc1,arc2,m,n,M,N,liney)
+        #self.play(Transform(liney,Dientich),run_time=5)
+        self.play(Write(Dientich),run_time=5)
+        self.play(Flash(Dientich),run_time=2)
+        self.play(Circumscribe(Dientich),run_time=2)
+        self.play(ApplyWave(Dientich,direction=RIGHT,
+            time_width=0.5,
+            amplitude=0.3
+        ))
+        #self.move_camera(zoom=0.75)
+if __name__ == "__main__":
+    script_name = f"{Path(__file__).resolve()}"
+    os.system(f"manim {script_name} {SCENE} {FLAGS}")
