@@ -1,0 +1,79 @@
+from manim import *
+from pathlib import Path
+import os 
+from colour import *
+import math
+#from manim_slides import Slide
+from manim_slides import ThreeDSlide
+# import numpy as np
+
+# --- Các chỉ định render ---
+# FLAGS = f"-pr 1920x1080"  
+# Render video: -r 1920,1080 ; -pql, -pqm, -pqh, -pqp, -pqk;  
+# Render hình: -ps, -psql, -psqp, -psqk
+#FLAGS = f"-psqk" # Xuất hình 4K
+FLAGS = f"-pqh"  # Xuất video FULL HD 60 khung hình trên giây
+#FLAGS = f"-pqk"#Thử nghiệm chất lượng video qua các Render
+SCENE = "example" #  Sân khấu mình cần renderimport math as m
+#manim-slides convert --to=pptx Tamdienvuong Tamdienvuong.pptx
+class BasiShape(MovingCameraScene):
+    def construct(self):
+        self.add_sound("unlimited-motivation-background-vlog-music-158250")
+        ### Khai báo các điểm M =[x,y,z]        
+        a = 1
+        n=1
+        k=0.5
+        u=1
+        v=0
+        g=90
+        A = Dot([0,0,0])
+        B = Dot([0,1,0])
+        O =Dot([0,0,0])
+        SS = Line(A.get_center(),B.get_center())
+        Canh1 =VGroup()
+        for i,j in  [(0,WHITE),(1,YELLOW_C),(2,GREEN_C),(3,PURE_RED)]:
+            s = Line(A.get_center(),B.get_center()).shift([0,0,0]).rotate(i * g * DEGREES, axis = IN, about_point = [0,v,0]).scale(1)
+            Canh1.add(s.set_color(j))
+        Canh2 = VGroup()
+        for i,j in  [(0,WHITE),(1,YELLOW_C),(2,GREEN_C),(3,PURE_RED)]:
+            Canh2.add(Canh1.copy().set_color(j).shift([0,u,0]).rotate(i*g * DEGREES, axis = OUT, about_point =  [0,v,0]).scale(k))
+        Canh3 = VGroup()
+        for i,j in  [(0,WHITE),(1,YELLOW_C),(2,GREEN_C),(3,PURE_RED)]:
+            Canh3.add(Canh2.copy().set_color(j).shift([0,u,0]).rotate(i*g * DEGREES, axis = OUT, about_point =  [0,v,0]).scale(k))
+        Canh4 = VGroup()
+        for i,j in  [(0,WHITE),(1,YELLOW_C),(2,GREEN_C),(3,PURE_RED)]:
+            Canh4.add(Canh3.copy().set_color(j).shift([0,u,0]).rotate(i*g * DEGREES, axis = OUT, about_point =  [0,v,0]).scale(k))
+        Canh5 = VGroup()
+        for i,j in  [(0,WHITE),(1,YELLOW_C),(2,GREEN_C),(3,PURE_RED)]:
+            Canh5.add(Canh4.copy().set_color(j).shift([0,u,0]).rotate(i*g * DEGREES, axis = OUT, about_point =  [0,v,0]).scale(k))
+        Canh6 = VGroup()
+        for i,j in  [(0,WHITE),(1,YELLOW_C),(2,GREEN_C),(3,PURE_RED)]:
+            Canh6.add(Canh5.copy().set_color(j).shift([0,u,0]).rotate(i*g * DEGREES, axis = OUT, about_point =  [0,v,0]).scale(k))
+        Nhom =VGroup(Canh1,Canh2,Canh3,Canh4,Canh5,Canh6)
+        Frac = Text("Fractan width Manim",color=YELLOW_C).scale(2)
+        ###Đoạn định nghĩa hàm: Cấu trúc: def ham(Biến1, Biến2,...). Tùy chọn shade_in_3d=True giữ tính 3D
+        #def face(S):
+        #mm = face(SS)
+        self.add(O)
+        self.play(Write(Canh1),run_time=5)
+        self.play(Write(Canh2),run_time=5)
+        self.play(Write(Canh3),run_time=5)
+        self.play(Write(Canh4),run_time=5)
+        self.play(Write(Canh5),run_time=5)
+        self.play(Write(Canh6),run_time=10)
+        self.play(Canh6[0].animate.shift([3,3,0]),Canh6[1].animate.shift([-3,3,0]),Canh6[2].animate.shift([-3,-3,0]),Canh6[3].animate.shift([3,-3,0]),run_time=5)
+        self.play(Canh6[0].animate.shift([-3,-3,0]),Canh6[1].animate.shift([3,-3,0]),Canh6[2].animate.shift([3,3,0]),Canh6[3].animate.shift([-3,3,0]),run_time=5)
+        self.play(self.camera.frame.animate.move_to(Canh6[0]))
+        self.wait(0.3)
+        self.play(self.camera.frame.animate.move_to(Canh6[1]))
+        self.wait(0.3)
+        self.play(self.camera.frame.animate.move_to(Canh6[2]))
+        self.wait(0.3)
+        self.play(self.camera.frame.animate.move_to(Canh6[3]))
+        self.wait(0.3)        
+        self.play(self.camera.frame.animate.move_to([0,0,0]).set(width=1),run_time=10)
+        self.play(self.camera.frame.animate.move_to([0,0,0]).set(width=14))
+        self.play(Transform(Nhom,Frac),run_time=5)
+if __name__ == "__main__":
+    script_name = f"{Path(__file__).resolve()}"
+    os.system(f"manim {script_name} {SCENE} {FLAGS}")
