@@ -1,0 +1,65 @@
+from manim import *
+from pathlib import Path
+import os 
+from colour import *
+import math
+#from manim_slides import Slide
+#from manim_slides import ThreeDSlide
+FLAGS = f"-pqh"  # Xuất video FULL HD 60 khung hình trên giây
+#FLAGS = f"-pqk"#Thử nghiệm chất lượng video qua các Render
+SCENE = "example" #  Sân khấu mình cần renderimport math as m
+class GetAxisLabelsExample(ThreeDScene):
+    def construct(self):
+        self.add_sound("unlimited-motivation-background-vlog-music-158250")
+        self.set_camera_orientation(phi=2*PI/5, theta=PI/5)
+        axes = ThreeDAxes(
+        x_range=(-1,5,1),
+        x_length=6,
+        y_range=(-1,5,1),
+        y_length=6,
+        z_range=(-1,5,1),
+        z_length=6
+        )
+        labels = axes.get_axis_labels(
+            Tex("x-axis").scale(0.7), Text("y-axis").scale(0.45), Text("z-axis").scale(0.45)
+        )
+        
+        paraboloid = Surface(
+            lambda u, v: np.array([
+                np.cos(v)*u,
+                np.sin(v)*u,
+                (1/20)*(100-u**2)
+            ]),u_range=[7,10],v_range=[0,2*PI],,checkerboard_colors=[PINK,YELLOW_C]
+        ).set_opacity(0.5)
+        paraboloid_dinh = Surface(
+            lambda u, v: np.array([
+                np.cos(v)*u,
+                np.sin(v)*u,
+                (1/20)*(100-u**2)
+            ]),u_range=[0,7],v_range=[0,2*PI],checkerboard_colors=[PINK,TEAL]).set_opacity(0.5)
+        r=7
+        h = (-1/20)*(r
+            **2-100)        
+        Vongtron = Surface(
+            lambda u, v: np.array([
+                np.cos(v)*u,
+                np.sin(v)*u,h]),v_range=[0,2*PI],u_range=[0,7],checkerboard_colors=[PURE_GREEN,YELLOW_C])
+        Vongtron_day = Surface(
+            lambda u, v: np.array([
+                np.cos(v)*u,
+                np.sin(v)*u,0]),v_range=[0,2*PI],u_range=[0,10],checkerboard_colors=[PURE_GREEN,YELLOW_C])
+        Nhom= VGroup(paraboloid,Vongtron.copy(),Vongtron_day)
+        Nhom_dinh=VGroup(Vongtron.copy(),paraboloid_dinh)
+        #self.add(Vongtron,paraboloid,paraboloid_dinh)
+        self.add(Nhom_dinh,Nhom,Vongtron_day)
+        self.move_camera(zoom=0.35,run_time=0.5)
+        self.play(Nhom_dinh.animate.shift([0,0,0.25]),Nhom.animate.shift([0,0,-1.25]),run_time=5)
+        self.move_camera(phi = 60 * DEGREES, theta = 150 * DEGREES,  run_time = 5)
+        self.play(Rotating(Nhom_dinh,axis=UL,radian=PI/4,rate_func=linear))
+        self.begin_ambient_camera_rotation(rate = 2/ 5)
+        self.play(Nhom_dinh.animate.shift([0,0,-0.25]),Nhom.animate.shift([0,0,1.25]),run_time=5)
+        self.remove(Nhom_dinh)
+        self.wait(10)
+if __name__ == "__main__":
+    script_name = f"{Path(__file__).resolve()}"
+    os.system(f"manim {script_name} {SCENE} {FLAGS}")
