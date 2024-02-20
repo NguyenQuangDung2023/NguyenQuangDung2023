@@ -29,7 +29,7 @@ class GetAxisLabelsExample(ThreeDScene):
                 np.cos(v)*u,
                 np.sin(v)*u,
                 (1/20)*(100-u**2)
-            ]),u_range=[7,10],v_range=[0,2*PI],,checkerboard_colors=[PINK,YELLOW_C]
+            ]),u_range=[7,10],v_range=[0,2*PI],checkerboard_colors=[PINK,YELLOW_C]
         ).set_opacity(0.5)
         paraboloid_dinh = Surface(
             lambda u, v: np.array([
