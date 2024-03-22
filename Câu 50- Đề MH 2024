@@ -1,0 +1,97 @@
+from manim import *
+from pathlib import Path
+import os 
+from colour import *
+import math
+#from manim_slides import Slide
+from manim_slides import ThreeDSlide
+# import numpy as np
+
+# --- Các chỉ định render ---
+# FLAGS = f"-pr 1920x1080"  
+# Render video: -r 1920,1080 ; -pql, -pqm, -pqh, -pqp, -pqk;  
+# Render hình: -ps, -psql, -psqp, -psqk
+#FLAGS = f"-psqk" # Xuất hình 4K
+#FLAGS = f"-pqh"  # Xuất video FULL HD 60 khung hình trên giây
+FLAGS = f"1080"
+#FLAGS = f"-pqk"#Thử nghiệm chất lượng video qua các Render
+SCENE = "example" #  Sân khấu mình cần renderimport math as m
+#manim-slides convert --to=pptx Tamdienvuong Tamdienvuong.pptx
+class HSGTPHCM(ThreeDSlide,ThreeDScene):
+    def construct(self):
+        self.add_sound("hopeful-piano-112621")
+        self.set_camera_orientation(phi=80*DEGREES, theta=120*DEGREES)
+        axes_3d = ThreeDAxes(
+        x_range=(-1,5,1),
+        x_length=6,
+        y_range=(-1,5,1),
+        y_length=6,
+        z_range=(-1,5,1),
+        z_length=6
+        )
+        d=1
+        x = math.sqrt(25-d**2)
+        h = 5
+        r = 5 
+        cone = Surface(
+            lambda u, v: np.array([v * np.cos(u), v * np.sin(u), h - v]),
+            v_range=[0,r],
+            u_range=[0,TAU],
+            checkerboard_colors=[WHITE,YELLOW_C,BLUE,PURE_GREEN],#resolution=(50, 50),
+        ).set_opacity(0.25)
+        A = np.array([r,0,0])
+        B =np.array([-r,0,0])
+        S =np.array([0,0,r])
+        D =np.array([-r,d,r])
+        num_scale=1
+        col1 = BLUE
+        col2 = ORANGE
+        width_line=1
+        def update_point_A(obj):
+            new_x = np.sin(self.time)
+            new_y = np.cos(self.time)
+            new_z = np.sin(self.time) * np.cos(self.time)
+            obj.move_to(np.array([new_x, new_y, new_z]))
+            label_A.next_to(point_A, UP).to_corner(UR)
+        def face(self,position_list,color1,num1,color2,num2):
+            shape=Polygon(
+                *position_list,
+                fill_color=color1,
+                fill_opacity=num1,
+                stroke_color=color2,
+                stroke_width=num2,
+                shade_in_3d=True,
+            )
+            return shape
+        cone1 = cone.copy().set_opacity(0.1)
+        SAB=face(self,[S,A,B],BLUE,1,col2,width_line).set_opacity(0.75)
+        parabola = Surface(
+            lambda u, v: np.array([v*math.cos(u), d,h*(r-math.sqrt((v)**2+d**2))/r]),    
+            v_range=[-x,x],
+            u_range=[0,TAU],
+            checkerboard_colors=None,
+            fill_color=RED,
+            fill_opacity=0.5#,resolution=(50, 50)
+        ).set_opacity(0.5)
+        parabola1 = Surface(
+            lambda u, v: np.array([v, d,h*(r-math.sqrt((v)**2+d**2))/r]),    
+            v_range=[-x,x],
+            u_range=[0,TAU],
+            checkerboard_colors=None,
+            fill_color=RED,
+            fill_opacity=0.5#,resolution=(50, 50)
+        ).set_opacity(0.5)
+        
+        #Giao = Intersection(ABCD,cone)
+       
+        self.begin_ambient_camera_rotation(rate = 2/ 5)
+        self.move_camera(zoom=0.5,run_time=0.5)
+        self.play(Write(cone),Write(parabola))
+        self.wait(20)
+        self.remove(cone,parabola)
+        self.play(Write(SAB),Write(cone1),Write(parabola1))
+        self.wait(20)
+        #self.add(cone,SAB,parabola,parabola1,cone1)
+if __name__ == "__main__":
+    script_name = f"{Path(__file__).resolve()}"
+    os.system(f"manim {script_name} {SCENE} {FLAGS}")
